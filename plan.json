@@ -1,0 +1,221 @@
+{
+  "project": "Opportunity Evaluator",
+  "version": "1.1",
+  "status": "Planning Complete - Ready for Implementation",
+  "reviewed_by": "ChatGPT",
+  "reviewed_date": "2025-11-14",
+  "collaborators": [
+    "Claude Code",
+    "ChatGPT",
+    "Meciah (Human Middleman)"
+  ],
+  "tech_stack": {
+    "database": "SQLite",
+    "backend": "Python FastAPI",
+    "frontend": "React + Vite",
+    "testing": "pytest + React Testing Library",
+    "deployment": "Docker"
+  },
+  "core_metrics": [
+    {
+      "name": "Daily ROI Percentage",
+      "formula": "profit = expected_return - initial_investment; daily_roi_pct = (profit / max(initial_investment, 1)) / turnaround_days * 100",
+      "notes": "Uses max() to prevent division by zero"
+    },
+    {
+      "name": "Risk-Adjusted ROI",
+      "formula": "risk_adjusted_roi = daily_roi_pct * (1 - risk_factor)",
+      "notes": "risk_factor ∈ [0.0, 1.0]"
+    },
+    {
+      "name": "Opportunity Cost",
+      "formula": "opportunity_cost = time_required_hours * hourly_rate",
+      "notes": "Phase 1 uses time-based cost only"
+    },
+    {
+      "name": "Composite Score",
+      "formula": "composite_score = (scored_roi * 0.5) + (scored_cost * 0.3) + (scored_certainty * 0.2)",
+      "notes": "Inputs are normalized to 0-1 scale before weighting"
+    }
+  ],
+  "database_schema": {
+    "opportunities": {
+      "core_fields": [
+        "id",
+        "name",
+        "initial_investment",
+        "expected_return",
+        "turnaround_days",
+        "time_required_hours",
+        "hourly_rate",
+        "risk_factor",
+        "certainty_score"
+      ],
+      "phase1_additions": [
+        "category",
+        "effort_hours",
+        "is_recurring",
+        "liquidation_risk",
+        "max_capital_allowed",
+        "scaling_limit"
+      ]
+    },
+    "accounts": {
+      "fields": [
+        "id",
+        "type",
+        "credit_limit",
+        "current_balance",
+        "apr",
+        "statement_day",
+        "due_day",
+        "available_credit",
+        "notes"
+      ],
+      "notes": "Placeholder for future float/liquidity modeling - not used in Phase 1"
+    }
+  },
+  "deliverables": {
+    "backend": [
+      "FastAPI app skeleton",
+      "SQLite database with schema (opportunities + accounts tables)",
+      "SQL views for computed metrics (with inline lineage comments)",
+      "GET /recommendations endpoint (top 10 by composite_score)",
+      "GET /metrics endpoint (debug/validation endpoint)",
+      "POST /opportunities endpoint (add new opportunity)",
+      "Deterministic seed script (5-10 canonical examples)"
+    ],
+    "frontend": [
+      "React app with Vite",
+      "TopOpportunities page (displays top 10)",
+      "OpportunityCard component (shows metrics)",
+      "Basic styling (minimal, functional)"
+    ],
+    "testing": [
+      "test_metrics.py (validates all 4 formulas with canonical examples)",
+      "test_api.py (validates endpoints return correct data)",
+      "Pytest output attached to PR"
+    ],
+    "documentation": [
+      "lineage.md (explains metric calculations)",
+      "PROMPTS/PLANNING_PROMPT.md (versioned)",
+      "README.md (quickstart instructions)",
+      ".env.example (no secrets in code)"
+    ],
+    "infrastructure": [
+      "Dockerfile (backend)",
+      "docker-compose.yml (backend + frontend)",
+      "requirements.txt",
+      "package.json"
+    ]
+  },
+  "implementation_steps": [
+    {
+      "step": 1,
+      "description": "Create branch planning/claude-init",
+      "estimated_hours": 0.1
+    },
+    {
+      "step": 2,
+      "description": "Create database schema (schema.sql with opportunities and accounts tables)",
+      "estimated_hours": 1
+    },
+    {
+      "step": 3,
+      "description": "Create SQL views for computed metrics with lineage comments",
+      "estimated_hours": 2
+    },
+    {
+      "step": 4,
+      "description": "Create deterministic seed data script",
+      "estimated_hours": 0.5
+    },
+    {
+      "step": 5,
+      "description": "Implement FastAPI application structure",
+      "estimated_hours": 1
+    },
+    {
+      "step": 6,
+      "description": "Implement Pydantic models with all schema fields",
+      "estimated_hours": 1
+    },
+    {
+      "step": 7,
+      "description": "Implement /recommendations endpoint",
+      "estimated_hours": 1.5
+    },
+    {
+      "step": 8,
+      "description": "Implement /metrics debug endpoint",
+      "estimated_hours": 0.5
+    },
+    {
+      "step": 9,
+      "description": "Implement /opportunities CRUD endpoint",
+      "estimated_hours": 1
+    },
+    {
+      "step": 10,
+      "description": "Create React frontend skeleton with Vite",
+      "estimated_hours": 1
+    },
+    {
+      "step": 11,
+      "description": "Implement TopOpportunities page and OpportunityCard component",
+      "estimated_hours": 1.5
+    },
+    {
+      "step": 12,
+      "description": "Write unit tests for all metrics (test_metrics.py)",
+      "estimated_hours": 1.5
+    },
+    {
+      "step": 13,
+      "description": "Write API integration tests (test_api.py)",
+      "estimated_hours": 1
+    },
+    {
+      "step": 14,
+      "description": "Run tests and fix any failures",
+      "estimated_hours": 1
+    },
+    {
+      "step": 15,
+      "description": "Create Docker configuration",
+      "estimated_hours": 1
+    },
+    {
+      "step": 16,
+      "description": "Write documentation (lineage.md, README.md, .env.example)",
+      "estimated_hours": 1.5
+    },
+    {
+      "step": 17,
+      "description": "Create readiness_report.md and push PR",
+      "estimated_hours": 0.5
+    }
+  ],
+  "estimated_total_hours": 17.6,
+  "chatgpt_feedback": {
+    "required_fixes_applied": [
+      "Fixed daily ROI formula to prevent division by zero",
+      "Fixed composite score with normalization",
+      "Added missing schema fields (category, effort_hours, is_recurring, liquidation_risk, max_capital_allowed, scaling_limit)",
+      "Clarified opportunity_cost as time-based for Phase 1",
+      "Added accounts table placeholder for future float/liquidity modeling"
+    ],
+    "recommended_improvements": [
+      "Added /metrics debug endpoint",
+      "Documented inline lineage comments in SQL views",
+      "Created deterministic seed script requirement"
+    ],
+    "deferred_to_future_phases": [
+      "Alembic migrations",
+      "Job queue for ML",
+      "Feature flags"
+    ]
+  },
+  "branch": "planning/claude-init",
+  "pr_title": "planning: initial Claude bootstrap for Opportunity Evaluator v1.1"
+}
