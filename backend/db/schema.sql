@@ -39,6 +39,11 @@ CREATE TABLE IF NOT EXISTS opportunities (
     -- How many times can this opportunity be scaled/repeated?
     scaling_limit INTEGER,
 
+    -- ICE Scoring Fields (Phase 2)
+    impact INTEGER DEFAULT 5 CHECK(impact >= 0 AND impact <= 10),
+    confidence INTEGER DEFAULT 5 CHECK(confidence >= 0 AND confidence <= 10),
+    ease INTEGER DEFAULT 5 CHECK(ease >= 0 AND ease <= 10),
+
     -- Timestamps
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

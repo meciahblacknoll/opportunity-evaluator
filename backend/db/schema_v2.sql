@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS credit_card_cycles (
   balance_at_statement INTEGER DEFAULT 0,
   min_payment INTEGER DEFAULT 0,
   due_date TEXT,
-  created_at TEXT DEFAULT (datetime('now'))
+  created_at TEXT DEFAULT (datetime('now')),
+  UNIQUE(account_id, statement_end)  -- ChatGPT correction: prevent duplicate cycles
 );
 
 -- loan_terms
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS cashflow_events (
 );
 
 -- opportunity_meta for churn-style offers
+-- Note: ICE fields moved to main opportunities table per ChatGPT review
 CREATE TABLE IF NOT EXISTS opportunity_meta (
   opportunity_id INTEGER PRIMARY KEY REFERENCES opportunities(id),
   is_churn_bonus BOOLEAN DEFAULT 0,
@@ -76,12 +78,6 @@ CREATE TABLE IF NOT EXISTS opportunity_meta (
   reward_type TEXT DEFAULT 'cash', -- 'cash', 'points', 'statement_credit'
   required_accounts TEXT, -- JSON string array of account IDs or types
   expected_payout_days INTEGER DEFAULT 0,
-
-  -- ICE scoring fields
-  impact INTEGER DEFAULT 5 CHECK(impact >= 0 AND impact <= 10),
-  confidence INTEGER DEFAULT 5 CHECK(confidence >= 0 AND confidence <= 10),
-  ease INTEGER DEFAULT 5 CHECK(ease >= 0 AND ease <= 10),
-
   created_at TEXT DEFAULT (datetime('now'))
 );
 
@@ -91,3 +87,8 @@ CREATE INDEX IF NOT EXISTS idx_credit_card_cycles_account ON credit_card_cycles(
 CREATE INDEX IF NOT EXISTS idx_loan_terms_account ON loan_terms(account_id);
 CREATE INDEX IF NOT EXISTS idx_cashflow_events_account ON cashflow_events(account_id);
 CREATE INDEX IF NOT EXISTS idx_cashflow_events_date ON cashflow_events(date);
+
+-- Simulation performance indexes (ChatGPT correction)
+CREATE INDEX IF NOT EXISTS idx_credit_card_cycles_due_date ON credit_card_cycles(due_date);
+CREATE INDEX IF NOT EXISTS idx_limit_windows_start_date ON limit_windows(start_date);
+CREATE INDEX IF NOT EXISTS idx_limit_windows_end_date ON limit_windows(end_date);
