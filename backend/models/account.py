@@ -172,7 +172,7 @@ class OpportunityMetaBase(BaseModel):
     opportunity_id: int
     is_churn_bonus: bool = False
     min_spend: int = Field(default=0, ge=0)
-    reward_amount: int = Field(default=0, ge=0)
+    reward_amount: int = Field(default=0, ge=0)  # Raw value: cents for cash, points for points
     reward_type: RewardType = RewardType.CASH
     required_accounts: Optional[str] = None  # JSON array string
     expected_payout_days: int = Field(default=0, ge=0)

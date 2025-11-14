@@ -19,7 +19,8 @@ from services.finance.apr import apr_to_daily_rate, compound_cost
 class TimelineEvent:
     """Event in the simulation timeline."""
     date: date
-    type: str  # 'inflow', 'outflow', 'opportunity_start', 'opportunity_end', 'cycle_due'
+    type: str  # 'inflow', 'outflow', 'opportunity_start', 'opportunity_end', 'cycle_due',
+               # 'statement_close', 'loan_payment', 'limit_window_start', 'limit_window_end'
     amount: int
     description: str
     account_id: Optional[int] = None
@@ -62,7 +63,10 @@ class FloatSimulator:
         start_date: date,
         end_date: date,
         accounts: List[Dict[str, Any]],
-        cashflow_events: List[Dict[str, Any]]
+        cashflow_events: List[Dict[str, Any]],
+        limit_windows: Optional[List[Dict[str, Any]]] = None,
+        credit_card_cycles: Optional[List[Dict[str, Any]]] = None,
+        loan_terms: Optional[List[Dict[str, Any]]] = None
     ) -> SimulationResult:
         """
         Run deterministic float simulation.
@@ -74,6 +78,9 @@ class FloatSimulator:
             end_date: Simulation end date
             accounts: Available accounts for float
             cashflow_events: Scheduled inflows/outflows
+            limit_windows: Available credit windows (optional)
+            credit_card_cycles: Credit card billing cycles (optional)
+            loan_terms: Loan payment schedules (optional)
 
         Returns:
             SimulationResult with timeline and costs
