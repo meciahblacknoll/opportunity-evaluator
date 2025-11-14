@@ -1,0 +1,74 @@
+{
+  "project": "Opportunity Evaluator",
+  "version": "2.0",
+  "phase": "Phase 2 - Financial Modeling & ICE Scoring",
+  "branch": "phase-2/financial-modeling",
+  "estimated_hours": 28,
+  "steps": [
+    "Create branch phase-2/financial-modeling",
+    "Add schema_v2.sql and migration scripts",
+    "Add seed_phase2.sql with deterministic test data",
+    "Implement account Pydantic models",
+    "Implement APR helpers (backend/services/finance/apr.py)",
+    "Implement float simulator (backend/services/finance/simulator.py)",
+    "Implement ICE scoring (backend/services/scoring/ice.py)",
+    "Extend recommendations endpoint (mode, available_cash params)",
+    "Add accounts routes (backend/routes/accounts.py)",
+    "Add simulate route (backend/routes/simulate.py)",
+    "Frontend: Accounts page",
+    "Frontend: Simulation page",
+    "Frontend: Scoring mode toggle in TopOpportunities",
+    "Write tests (test_finance.py, test_ice.py, test_migrations.py)",
+    "Run full test suite locally",
+    "Open PR with test logs"
+  ],
+  "deliverables": {
+    "backend": [
+      "backend/db/schema_v2.sql",
+      "backend/db/seed_phase2.sql",
+      "backend/migrations/001_add_financial_tables.sql",
+      "backend/services/scoring/ice.py",
+      "backend/services/finance/apr.py",
+      "backend/services/finance/simulator.py",
+      "backend/routes/accounts.py",
+      "backend/routes/simulate.py",
+      "backend/models/account.py",
+      "backend/config.py (USE_PHASE2 flag)"
+    ],
+    "frontend": [
+      "frontend/src/pages/Accounts.jsx",
+      "frontend/src/pages/Simulation.jsx",
+      "Update: frontend/src/pages/TopOpportunities.jsx"
+    ],
+    "tests": [
+      "tests/test_finance.py",
+      "tests/test_ice.py",
+      "tests/test_migrations.py",
+      "Update: tests/test_api.py"
+    ],
+    "docs": [
+      "PROMPTS/PLANNING_PROMPT_v2.md",
+      "docs/schema_v2.md",
+      "docs/migration_plan.md",
+      "docs/simulations.md"
+    ],
+    "ci": [
+      ".github/workflows/test.yml (updated)"
+    ]
+  },
+  "new_features": [
+    "ICE scoring mode (Impact, Confidence, Ease)",
+    "APR & float cost calculations",
+    "Liquidity/float timeline simulator",
+    "Accounts management (credit cards, loans, bank accounts)",
+    "Churning/bonus opportunity modeling",
+    "Available cash constraints in recommendations"
+  ],
+  "constraints": [
+    "All logic deterministic",
+    "No secrets in code",
+    "Feature flag: USE_PHASE2",
+    "Simulation outputs include input snapshot",
+    "Backward compatible with Phase 1"
+  ]
+}
