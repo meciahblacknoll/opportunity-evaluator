@@ -20,12 +20,22 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # Import API routers
 from api import recommendations, opportunities, metrics as metrics_api
+from config import USE_PHASE2
+
+# Phase 2 imports (conditional)
+if USE_PHASE2:
+    from api import accounts, simulate
 
 # Database configuration
 DB_PATH = Path(__file__).parent / "data" / "opportunities.db"
 SCHEMA_PATH = Path(__file__).parent / "db" / "schema.sql"
 VIEWS_PATH = Path(__file__).parent / "db" / "views.sql"
 SEED_PATH = Path(__file__).parent / "db" / "seed_data.sql"
+
+# Phase 2 database paths
+SCHEMA_V2_PATH = Path(__file__).parent / "db" / "schema_v2.sql"
+VIEWS_V2_PATH = Path(__file__).parent / "db" / "views_v2.sql"
+SEED_V2_PATH = Path(__file__).parent / "db" / "seed_phase2.sql"
 
 
 def init_database():
@@ -46,6 +56,20 @@ def init_database():
         views_sql = f.read()
         cursor.executescript(views_sql)
 
+    # Phase 2: Load additional schema and views
+    if USE_PHASE2:
+        if SCHEMA_V2_PATH.exists():
+            with open(SCHEMA_V2_PATH, 'r') as f:
+                schema_v2_sql = f.read()
+                cursor.executescript(schema_v2_sql)
+            print("✓ Loaded Phase 2 schema")
+
+        if VIEWS_V2_PATH.exists():
+            with open(VIEWS_V2_PATH, 'r') as f:
+                views_v2_sql = f.read()
+                cursor.executescript(views_v2_sql)
+            print("✓ Loaded Phase 2 views")
+
     # Check if database is empty, if so load seed data
     cursor.execute("SELECT COUNT(*) FROM opportunities")
     count = cursor.fetchone()[0]
@@ -55,6 +79,13 @@ def init_database():
             seed_sql = f.read()
             cursor.executescript(seed_sql)
         print("✓ Loaded seed data")
+
+        # Phase 2: Load additional seed data
+        if USE_PHASE2 and SEED_V2_PATH.exists():
+            with open(SEED_V2_PATH, 'r') as f:
+                seed_v2_sql = f.read()
+                cursor.executescript(seed_v2_sql)
+            print("✓ Loaded Phase 2 seed data")
 
     conn.commit()
     conn.close()
@@ -99,6 +130,11 @@ app.add_middleware(
 app.include_router(recommendations.router, prefix="/api", tags=["recommendations"])
 app.include_router(opportunities.router, prefix="/api", tags=["opportunities"])
 app.include_router(metrics_api.router, prefix="/api", tags=["metrics"])
+
+# Phase 2 routers
+if USE_PHASE2:
+    app.include_router(accounts.router, prefix="/api", tags=["accounts"])
+    app.include_router(simulate.router, prefix="/api", tags=["simulation"])
 
 
 @app.get("/")
