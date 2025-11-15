@@ -1,0 +1,886 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.9.6, pytest-7.4.3, pluggy-1.6.0 -- /Users/meciahblacknoll/meciah/system/automation-ideas/opportunity-evaluator/venv/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/meciahblacknoll/meciah/system/automation-ideas/opportunity-evaluator
+configfile: pytest.ini
+plugins: asyncio-0.21.1, anyio-3.7.1
+asyncio: mode=auto
+collecting ... collected 18 items
+
+tests/test_api.py::test_root_endpoint PASSED                             [  5%]
+tests/test_api.py::test_health_check PASSED                              [ 11%]
+tests/test_api.py::test_get_recommendations FAILED                       [ 16%]
+tests/test_api.py::test_get_recommendations_with_limit FAILED            [ 22%]
+tests/test_api.py::test_get_metrics FAILED                               [ 27%]
+tests/test_api.py::test_get_metrics_debug FAILED                         [ 33%]
+tests/test_api.py::test_create_opportunity FAILED                        [ 38%]
+tests/test_api.py::test_list_opportunities FAILED                        [ 44%]
+tests/test_api.py::test_get_opportunity FAILED                           [ 50%]
+tests/test_api.py::test_update_opportunity FAILED                        [ 55%]
+tests/test_api.py::test_delete_opportunity FAILED                        [ 61%]
+tests/test_api.py::test_validation_errors PASSED                         [ 66%]
+tests/test_metrics.py::test_daily_roi_percentage_zero_investment PASSED  [ 72%]
+tests/test_metrics.py::test_daily_roi_percentage_with_investment PASSED  [ 77%]
+tests/test_metrics.py::test_risk_adjusted_roi PASSED                     [ 83%]
+tests/test_metrics.py::test_opportunity_cost PASSED                      [ 88%]
+tests/test_metrics.py::test_composite_score_normalization PASSED         [ 94%]
+tests/test_metrics.py::test_zero_opportunity_cost_edge_case PASSED       [100%]
+
+=================================== FAILURES ===================================
+___________________________ test_get_recommendations ___________________________
+
+    @pytest.mark.asyncio
+    async def test_get_recommendations():
+        """Test recommendations endpoint returns ranked opportunities."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+>           response = await client.get("/api/recommendations")
+
+tests/test_api.py:52: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1757: in get
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/recommendations.py:72: in get_recommendations
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-1, started 6118223872)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: ranked_opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-4' coro=<<async_generator_athrow without __name__>()>>
+_____________________ test_get_recommendations_with_limit ______________________
+
+    @pytest.mark.asyncio
+    async def test_get_recommendations_with_limit():
+        """Test recommendations endpoint respects limit parameter."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+>           response = await client.get("/api/recommendations?limit=3")
+
+tests/test_api.py:80: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1757: in get
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/recommendations.py:72: in get_recommendations
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-2, started 6135050240)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: ranked_opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-6' coro=<<async_generator_athrow without __name__>()>>
+_______________________________ test_get_metrics _______________________________
+
+    @pytest.mark.asyncio
+    async def test_get_metrics():
+        """Test metrics endpoint returns computed metrics."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+>           response = await client.get("/api/metrics")
+
+tests/test_api.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1757: in get
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/metrics.py:56: in get_computed_metrics
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-3, started 6151876608)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: computed_metrics
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-8' coro=<<async_generator_athrow without __name__>()>>
+____________________________ test_get_metrics_debug ____________________________
+
+    @pytest.mark.asyncio
+    async def test_get_metrics_debug():
+        """Test metrics debug endpoint for specific opportunity."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+            # First get an opportunity ID
+>           response = await client.get("/api/recommendations?limit=1")
+
+tests/test_api.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1757: in get
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/recommendations.py:72: in get_recommendations
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-4, started 6168702976)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: ranked_opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-10' coro=<<async_generator_athrow without __name__>()>>
+___________________________ test_create_opportunity ____________________________
+
+    @pytest.mark.asyncio
+    async def test_create_opportunity():
+        """Test creating a new opportunity."""
+        new_opp = {
+            "name": "API Test Opportunity",
+            "initial_investment": 1000,
+            "expected_return": 1500,
+            "turnaround_days": 30,
+            "time_required_hours": 20,
+            "hourly_rate": 50,
+            "risk_factor": 0.2,
+            "certainty_score": 0.8,
+            "category": "Test",
+            "is_recurring": False
+        }
+    
+        async with AsyncClient(app=app, base_url="http://test") as client:
+>           response = await client.post("/api/opportunities", json=new_opp)
+
+tests/test_api.py:149: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1848: in post
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/opportunities.py:60: in create_opportunity
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-5, started 6185529344)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-12' coro=<<async_generator_athrow without __name__>()>>
+___________________________ test_list_opportunities ____________________________
+
+    @pytest.mark.asyncio
+    async def test_list_opportunities():
+        """Test listing all opportunities."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+>           response = await client.get("/api/opportunities")
+
+tests/test_api.py:164: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1757: in get
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/opportunities.py:84: in list_opportunities
+    async with db.execute(query) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-6, started 6202355712)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-14' coro=<<async_generator_athrow without __name__>()>>
+_____________________________ test_get_opportunity _____________________________
+
+    @pytest.mark.asyncio
+    async def test_get_opportunity():
+        """Test getting a specific opportunity by ID."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+            # Get first opportunity ID from list
+>           list_response = await client.get("/api/opportunities")
+
+tests/test_api.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1757: in get
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/opportunities.py:84: in list_opportunities
+    async with db.execute(query) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-7, started 6219182080)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-16' coro=<<async_generator_athrow without __name__>()>>
+___________________________ test_update_opportunity ____________________________
+
+    @pytest.mark.asyncio
+    async def test_update_opportunity():
+        """Test updating an opportunity."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+            # First create an opportunity
+            new_opp = {
+                "name": "Update Test",
+                "initial_investment": 1000,
+                "expected_return": 1500,
+                "turnaround_days": 30,
+                "time_required_hours": 20,
+                "hourly_rate": 50,
+                "risk_factor": 0.2,
+                "certainty_score": 0.8
+            }
+>           create_response = await client.post("/api/opportunities", json=new_opp)
+
+tests/test_api.py:205: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1848: in post
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/opportunities.py:60: in create_opportunity
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-8, started 6236008448)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-18' coro=<<async_generator_athrow without __name__>()>>
+___________________________ test_delete_opportunity ____________________________
+
+    @pytest.mark.asyncio
+    async def test_delete_opportunity():
+        """Test deleting an opportunity."""
+        async with AsyncClient(app=app, base_url="http://test") as client:
+            # First create an opportunity
+            new_opp = {
+                "name": "Delete Test",
+                "initial_investment": 1000,
+                "expected_return": 1500,
+                "turnaround_days": 30,
+                "time_required_hours": 20,
+                "hourly_rate": 50,
+                "risk_factor": 0.2,
+                "certainty_score": 0.8
+            }
+>           create_response = await client.post("/api/opportunities", json=new_opp)
+
+tests/test_api.py:233: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+venv/lib/python3.9/site-packages/httpx/_client.py:1848: in post
+    return await self.request(
+venv/lib/python3.9/site-packages/httpx/_client.py:1530: in request
+    return await self.send(request, auth=auth, follow_redirects=follow_redirects)
+venv/lib/python3.9/site-packages/httpx/_client.py:1617: in send
+    response = await self._send_handling_auth(
+venv/lib/python3.9/site-packages/httpx/_client.py:1645: in _send_handling_auth
+    response = await self._send_handling_redirects(
+venv/lib/python3.9/site-packages/httpx/_client.py:1682: in _send_handling_redirects
+    response = await self._send_single_request(request)
+venv/lib/python3.9/site-packages/httpx/_client.py:1719: in _send_single_request
+    response = await transport.handle_async_request(request)
+venv/lib/python3.9/site-packages/httpx/_transports/asgi.py:162: in handle_async_request
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/fastapi/applications.py:1106: in __call__
+    await super().__call__(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/applications.py:122: in __call__
+    await self.middleware_stack(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:184: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/errors.py:162: in __call__
+    await self.app(scope, receive, _send)
+venv/lib/python3.9/site-packages/starlette/middleware/cors.py:83: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:79: in __call__
+    raise exc
+venv/lib/python3.9/site-packages/starlette/middleware/exceptions.py:68: in __call__
+    await self.app(scope, receive, sender)
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:20: in __call__
+    raise e
+venv/lib/python3.9/site-packages/fastapi/middleware/asyncexitstack.py:17: in __call__
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:718: in __call__
+    await route.handle(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:276: in handle
+    await self.app(scope, receive, send)
+venv/lib/python3.9/site-packages/starlette/routing.py:66: in app
+    response = await func(request)
+venv/lib/python3.9/site-packages/fastapi/routing.py:274: in app
+    raw_response = await run_endpoint_function(
+venv/lib/python3.9/site-packages/fastapi/routing.py:191: in run_endpoint_function
+    return await dependant.call(**values)
+backend/api/opportunities.py:60: in create_opportunity
+    async with db.execute(query, params) as cursor:
+venv/lib/python3.9/site-packages/aiosqlite/context.py:39: in __aenter__
+    self._obj = await self._coro
+venv/lib/python3.9/site-packages/aiosqlite/core.py:190: in execute
+    cursor = await self._execute(self._conn.execute, sql, parameters)
+venv/lib/python3.9/site-packages/aiosqlite/core.py:133: in _execute
+    return await future
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Connection(Thread-9, started 6252834816)>
+
+    def run(self) -> None:
+        """
+        Execute function calls on a separate thread.
+    
+        :meta private:
+        """
+        while True:
+            # Continues running until all queue items are processed,
+            # even after connection is closed (so we can finalize all
+            # futures)
+            try:
+                future, function = self._tx.get(timeout=0.1)
+            except Empty:
+                if self._running:
+                    continue
+                break
+            try:
+                LOG.debug("executing %s", function)
+>               result = function()
+E               sqlite3.OperationalError: no such table: opportunities
+
+venv/lib/python3.9/site-packages/aiosqlite/core.py:106: OperationalError
+---------------------------- Captured log teardown -----------------------------
+ERROR    asyncio:base_events.py:1738 Task was destroyed but it is pending!
+task: <Task pending name='Task-20' coro=<<async_generator_athrow without __name__>()>>
+=============================== warnings summary ===============================
+venv/lib/python3.9/site-packages/pydantic/_internal/_config.py:268
+venv/lib/python3.9/site-packages/pydantic/_internal/_config.py:268
+venv/lib/python3.9/site-packages/pydantic/_internal/_config.py:268
+  /Users/meciahblacknoll/meciah/system/automation-ideas/opportunity-evaluator/venv/lib/python3.9/site-packages/pydantic/_internal/_config.py:268: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.5/migration/
+    warnings.warn(DEPRECATION_MESSAGE, DeprecationWarning)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_api.py::test_get_recommendations - sqlite3.OperationalError...
+FAILED tests/test_api.py::test_get_recommendations_with_limit - sqlite3.Opera...
+FAILED tests/test_api.py::test_get_metrics - sqlite3.OperationalError: no suc...
+FAILED tests/test_api.py::test_get_metrics_debug - sqlite3.OperationalError: ...
+FAILED tests/test_api.py::test_create_opportunity - sqlite3.OperationalError:...
+FAILED tests/test_api.py::test_list_opportunities - sqlite3.OperationalError:...
+FAILED tests/test_api.py::test_get_opportunity - sqlite3.OperationalError: no...
+FAILED tests/test_api.py::test_update_opportunity - sqlite3.OperationalError:...
+FAILED tests/test_api.py::test_delete_opportunity - sqlite3.OperationalError:...
+=================== 9 failed, 9 passed, 3 warnings in 0.97s ====================
