@@ -3,10 +3,12 @@
    /// Prompt: PROMPTS/PLANNING_PROMPT_v2.md (Phase 2 frontend)
    /// Author: Claude Code (via ChatGPT relay)
    /// Updated: 2025-11-15 (Phase 2.5 - Recharts Integration)
+   /// Updated: 2025-11-15 (Phase 2.5 - CSV/JSON Export)
 */
 
 import React, { useEffect, useState, useMemo } from "react";
 import ChartWrapper from "../components/ChartWrapper";
+import ExportButtons from "../components/ExportButtons";
 
 /**
  * SimulatePage.jsx
@@ -343,7 +345,14 @@ export default function SimulatePage() {
       <div style={{ marginTop: 20 }}>
         {simResult && (
           <div>
-            <h2>Simulation Results</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+              <h2 style={{ margin: 0 }}>Simulation Results</h2>
+              <ExportButtons
+                data={simResult}
+                filenameBase="simulation"
+                disabled={false}
+              />
+            </div>
 
             {/* Summary metrics */}
             <div style={{ display: "flex", gap: 12, marginBottom: 12 }} className="simulate-summary-metrics">

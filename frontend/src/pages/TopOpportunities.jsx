@@ -5,6 +5,7 @@
  * Referenced: backend/api/recommendations.py
  * Author: Claude Code
  * Updated: 2025-11-14 (Step 3 - Added scoring mode toggle)
+ * Updated: 2025-11-15 (Phase 2.5 - Added CSV/JSON export)
  *
  * Main page component that displays top opportunities ranked by composite score.
  * Supports ROI, ICE, and Combined scoring modes with localStorage persistence.
@@ -13,6 +14,7 @@
 import React, { useState, useEffect } from 'react'
 import OpportunityCard from '../components/OpportunityCard'
 import ScoringModeToggle from '../components/ScoringModeToggle'
+import ExportButtons from '../components/ExportButtons'
 
 export default function TopOpportunities() {
   // Initialize mode from localStorage, default to "roi"
@@ -64,7 +66,14 @@ export default function TopOpportunities() {
         </p>
       </header>
 
-      <ScoringModeToggle mode={mode} setMode={setMode} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
+        <ScoringModeToggle mode={mode} setMode={setMode} />
+        <ExportButtons
+          data={opportunities}
+          filenameBase="opportunities"
+          disabled={loading || opportunities.length === 0}
+        />
+      </div>
 
       {error && (
         <div className="error">
