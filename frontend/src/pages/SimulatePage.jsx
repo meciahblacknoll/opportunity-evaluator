@@ -174,14 +174,14 @@ export default function SimulatePage() {
 
       {loadingData && <p>Loading accounts and opportunities...</p>}
       {error && (
-        <div style={{ marginBottom: 12, padding: 8, background: "#ffe6e6", color: "#900" }}>
+        <div style={{ marginBottom: 12, padding: 8, background: "var(--accent-danger)", color: "#fff", borderRadius: 4 }}>
           {error}
         </div>
       )}
 
       {/* Form */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 20 }}>
-        <div style={{ padding: 12, borderRadius: 8, border: "1px solid #eee", background: "#fff" }}>
+        <div style={{ padding: 12, borderRadius: 8, border: "1px solid var(--border-light)", background: "var(--bg-secondary)" }}>
           <h3>Simulation Inputs</h3>
 
           <div style={{ display: "grid", gap: 8 }}>
@@ -257,7 +257,7 @@ export default function SimulatePage() {
                     />
                     <div style={{ marginLeft: 6 }}>
                       <div style={{ fontWeight: 600 }}>{o.name}</div>
-                      <div style={{ fontSize: 12, color: "#555" }}>
+                      <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>
                         Est. profit: ${centsToDollars(o.expected_return || o.expected_profit || 0)}
                         {" • "}
                         Duration: {o.turnaround_days || o.duration || "—"} days
@@ -275,10 +275,11 @@ export default function SimulatePage() {
                 disabled={simLoading}
                 style={{
                   padding: "10px 14px",
-                  background: "#007bff",
+                  background: "var(--accent-primary)",
                   color: "#fff",
                   borderRadius: 6,
-                  border: "none"
+                  border: "none",
+                  cursor: "pointer"
                 }}
               >
                 {simLoading ? "Simulating..." : "Run Simulation"}
@@ -295,9 +296,10 @@ export default function SimulatePage() {
                 }}
                 style={{
                   padding: "10px 14px",
-                  background: "#f0f0f0",
+                  background: "var(--bg-tertiary)",
                   borderRadius: 6,
-                  border: "1px solid #ddd"
+                  border: "1px solid var(--border-color)",
+                  cursor: "pointer"
                 }}
               >
                 Reset
@@ -307,7 +309,7 @@ export default function SimulatePage() {
         </div>
 
         {/* Right summary box */}
-        <aside style={{ padding: 12, borderRadius: 8, border: "1px solid #eee", background: "#fafafa" }}>
+        <aside style={{ padding: 12, borderRadius: 8, border: "1px solid var(--border-light)", background: "var(--bg-tertiary)" }}>
           <h3>Quick Summary</h3>
 
           <p>
@@ -345,26 +347,26 @@ export default function SimulatePage() {
 
             {/* Summary metrics */}
             <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
-              <div style={{ padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
-                <div style={{ fontSize: 12, color: "#666" }}>Total APR Cost</div>
-                <div style={{ fontSize: 20, fontWeight: 700 }}>${centsToDollars(simResult.total_apr_cost || 0)}</div>
+              <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>Total APR Cost</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-heading)" }}>${centsToDollars(simResult.total_apr_cost || 0)}</div>
               </div>
 
-              <div style={{ padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
-                <div style={{ fontSize: 12, color: "#666" }}>Projected Net Profit</div>
-                <div style={{ fontSize: 20, fontWeight: 700 }}>
+              <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>Projected Net Profit</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-heading)" }}>
                   {simResult.projected_net_profit !== undefined ? `${centsToDollars(simResult.projected_net_profit)}` : "—"}
                 </div>
               </div>
 
-              <div style={{ padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
-                <div style={{ fontSize: 12, color: "#666" }}>Opportunities Modeled</div>
-                <div style={{ fontSize: 20, fontWeight: 700 }}>{simResult.results?.length || 0}</div>
+              <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>Opportunities Modeled</div>
+                <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-heading)" }}>{simResult.results?.length || 0}</div>
               </div>
             </div>
 
             {/* Opportunity table */}
-            <div style={{ border: "1px solid #eee", borderRadius: 8, padding: 12, marginBottom: 12 }}>
+            <div style={{ border: "1px solid var(--border-light)", borderRadius: 8, padding: 12, marginBottom: 12, background: "var(--bg-secondary)" }}>
               <h3>Opportunities</h3>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead>
@@ -383,7 +385,7 @@ export default function SimulatePage() {
                       <td style={{ padding: 8 }}>${centsToDollars(r.expected_value || 0)}</td>
                       <td style={{ padding: 8 }}>${centsToDollars(r.float_required || r.required_float || 0)}</td>
                       <td style={{ padding: 8 }}>{r.duration_days || r.duration || "—"} days</td>
-                      <td style={{ padding: 8, color: r.warnings && r.warnings.length ? "#a00" : "#666" }}>
+                      <td style={{ padding: 8, color: r.warnings && r.warnings.length ? "var(--accent-danger)" : "var(--text-secondary)" }}>
                         {r.warnings && r.warnings.length ? r.warnings.join("; ") : "—"}
                       </td>
                     </tr>
@@ -394,7 +396,7 @@ export default function SimulatePage() {
 
             {/* Timeline + sparkline */}
             <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }}>
-              <div style={{ padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
+              <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
                 <h3>Daily Liquidity Timeline</h3>
                 {simResult.timeline && simResult.timeline.length ? (
                   <>
@@ -420,7 +422,7 @@ export default function SimulatePage() {
                 )}
               </div>
 
-              <div style={{ padding: 12, border: "1px solid #eee", borderRadius: 8 }}>
+              <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
                 <h3>Float Usage</h3>
                 {simResult.float_usage && simResult.float_usage.length ? (
                   <table style={{ width: "100%", borderCollapse: "collapse" }}>
@@ -452,13 +454,13 @@ export default function SimulatePage() {
                   {simResult.warnings && simResult.warnings.length ? (
                     <ul>
                       {simResult.warnings.map((w, i) => (
-                        <li key={i} style={{ color: "#a00" }}>
+                        <li key={i} style={{ color: "var(--accent-danger)" }}>
                           {w}
                         </li>
                       ))}
                     </ul>
                   ) : (
-                    <p style={{ color: "#666" }}>No warnings</p>
+                    <p style={{ color: "var(--text-secondary)" }}>No warnings</p>
                   )}
                 </div>
               </div>
@@ -469,8 +471,8 @@ export default function SimulatePage() {
 
       {/* Debug / Raw JSON (collapsible) */}
       <details style={{ marginTop: 18 }}>
-        <summary>Raw simulation output (debug)</summary>
-        <pre style={{ maxHeight: 400, overflow: "auto", background: "#f6f6f6", padding: 12 }}>
+        <summary style={{ color: "var(--text-primary)", cursor: "pointer" }}>Raw simulation output (debug)</summary>
+        <pre style={{ maxHeight: 400, overflow: "auto", background: "var(--bg-tertiary)", padding: 12, color: "var(--text-primary)", borderRadius: 4 }}>
           {JSON.stringify(simResult || {}, null, 2)}
         </pre>
       </details>
