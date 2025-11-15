@@ -11,7 +11,7 @@
 
 import React from 'react'
 
-export default function OpportunityCard({ opportunity, mode = 'roi' }) {
+function OpportunityCard({ opportunity, mode = 'roi' }) {
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -177,3 +177,5 @@ export default function OpportunityCard({ opportunity, mode = 'roi' }) {
     </div>
   )
 }
+
+export default React.memo(OpportunityCard)

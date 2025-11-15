@@ -36,7 +36,7 @@ export default function TopOpportunities() {
     fetchOpportunities()
   }, [mode])
 
-  const fetchOpportunities = async () => {
+  const fetchOpportunities = React.useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -55,7 +55,7 @@ export default function TopOpportunities() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [mode])
 
   return (
     <div className="app">

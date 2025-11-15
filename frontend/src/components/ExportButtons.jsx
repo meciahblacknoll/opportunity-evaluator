@@ -100,7 +100,7 @@ function exportCSV(data, filenameBase) {
  * @param {string} props.filenameBase - Base filename without extension
  * @param {boolean} props.disabled - Whether buttons are disabled
  */
-export default function ExportButtons({ data, filenameBase, disabled = false }) {
+function ExportButtons({ data, filenameBase, disabled = false }) {
   const handleJSONExport = () => {
     if (!disabled && data) {
       exportJSON(data, filenameBase);
@@ -183,3 +183,5 @@ export default function ExportButtons({ data, filenameBase, disabled = false }) 
     </div>
   );
 }
+
+export default React.memo(ExportButtons)

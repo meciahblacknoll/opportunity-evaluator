@@ -10,15 +10,7 @@
  */
 
 import React, { useMemo } from 'react';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  Area,
-  XAxis,
-  YAxis,
-  Tooltip
-} from 'recharts';
+import { ResponsiveContainer, LineChart, Line, Area, XAxis, YAxis, Tooltip } from 'recharts';
 
 /**
  * Normalize input data to a consistent format
