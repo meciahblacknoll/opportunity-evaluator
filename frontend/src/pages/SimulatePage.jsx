@@ -2,9 +2,11 @@
    /// Created: 2025-11-15
    /// Prompt: PROMPTS/PLANNING_PROMPT_v2.md (Phase 2 frontend)
    /// Author: Claude Code (via ChatGPT relay)
+   /// Updated: 2025-11-15 (Phase 2.5 - Recharts Integration)
 */
 
 import React, { useEffect, useState, useMemo } from "react";
+import ChartWrapper from "../components/ChartWrapper";
 
 /**
  * SimulatePage.jsx
@@ -36,36 +38,6 @@ const centsToDollars = (c) => {
 };
 
 const isoToday = () => new Date().toISOString().slice(0, 10);
-
-/* tiny SVG sparkline generator */
-function Sparkline({ points = [], width = 400, height = 60 }) {
-  if (!points || points.length === 0) {
-    return <div style={{ height }}>{/* empty */}</div>;
-  }
-  // normalize to 0..1
-  const min = Math.min(...points);
-  const max = Math.max(...points);
-  const range = max - min || 1;
-  const step = width / Math.max(points.length - 1, 1);
-  const coords = points.map((v, i) => {
-    const x = i * step;
-    const y = height - ((v - min) / range) * height;
-    return `${x},${y}`;
-  });
-  const path = coords.join(" ");
-  return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
-      <polyline
-        fill="none"
-        stroke="#333"
-        strokeWidth="2"
-        points={path}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
 
 /* ---------- Main Component ---------- */
 
@@ -427,10 +399,10 @@ export default function SimulatePage() {
                 {simResult.timeline && simResult.timeline.length ? (
                   <>
                     {/* Build data points from timeline daily balance field */}
-                    <Sparkline
-                      points={simResult.timeline.map((d) => d.balance || d.available_cash || 0).map(Number)}
-                      width={600}
+                    <ChartWrapper
+                      data={simResult.timeline.map((d) => d.balance || d.available_cash || 0).map(Number)}
                       height={80}
+                      stroke="var(--chart-line)"
                     />
 
                     {/* compact list of first 14 date rows */}

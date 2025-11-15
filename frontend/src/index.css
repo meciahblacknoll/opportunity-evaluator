@@ -1,3 +1,17 @@
+:root {
+  /* Chart colors for light mode */
+  --chart-line: #007bff;
+  --chart-fill: rgba(0, 123, 255, 0.08);
+  --sparkline-bg: #f1f3f5;
+}
+
+.dark {
+  /* Chart colors for dark mode */
+  --chart-line: #66b2ff;
+  --chart-fill: rgba(102, 178, 255, 0.08);
+  --sparkline-bg: #2d3748;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
