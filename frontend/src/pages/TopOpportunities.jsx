@@ -11,10 +11,11 @@
  * Supports ROI, ICE, and Combined scoring modes with localStorage persistence.
  */
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import OpportunityCard from '../components/OpportunityCard'
 import ScoringModeToggle from '../components/ScoringModeToggle'
 import ExportButtons from '../components/ExportButtons'
+import SortControls from '../components/SortControls'
 
 export default function TopOpportunities() {
   // Initialize mode from localStorage, default to "roi"
@@ -25,15 +26,11 @@ export default function TopOpportunities() {
   const [opportunities, setOpportunities] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [sortBy, setSortBy] = useState('score-desc')
 
   // Persist mode to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('scoringMode', mode)
-  }, [mode])
-
-  // Fetch opportunities whenever mode changes
-  useEffect(() => {
-    fetchOpportunities()
   }, [mode])
 
   const fetchOpportunities = React.useCallback(async () => {
@@ -57,6 +54,40 @@ export default function TopOpportunities() {
     }
   }, [mode])
 
+  // Fetch opportunities whenever mode changes
+  useEffect(() => {
+    fetchOpportunities()
+  }, [fetchOpportunities])
+
+  // Sort opportunities based on selected option
+  const sortedOpportunities = useMemo(() => {
+    const sorted = [...opportunities];
+    const [field, direction] = sortBy.split('-');
+
+    sorted.sort((a, b) => {
+      let aValue, bValue;
+
+      if (field === 'score') {
+        aValue = a.composite_score || a.combined_score || 0;
+        bValue = b.composite_score || b.combined_score || 0;
+      } else if (field === 'apr') {
+        aValue = a.apr || a.apr_percent || 0;
+        bValue = b.apr || b.apr_percent || 0;
+      } else if (field === 'profit') {
+        aValue = a.profit || a.expected_profit || 0;
+        bValue = b.profit || b.expected_profit || 0;
+      }
+
+      if (direction === 'asc') {
+        return aValue - bValue;
+      } else {
+        return bValue - aValue;
+      }
+    });
+
+    return sorted;
+  }, [opportunities, sortBy]);
+
   return (
     <div className="app">
       <header>
@@ -66,10 +97,13 @@ export default function TopOpportunities() {
         </p>
       </header>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem' }}>
-        <ScoringModeToggle mode={mode} setMode={setMode} />
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <ScoringModeToggle mode={mode} setMode={setMode} />
+          <SortControls sortBy={sortBy} onSortChange={setSortBy} />
+        </div>
         <ExportButtons
-          data={opportunities}
+          data={sortedOpportunities}
           filenameBase="opportunities"
           disabled={loading || opportunities.length === 0}
         />
@@ -93,9 +127,9 @@ export default function TopOpportunities() {
         </div>
       )}
 
-      {!loading && !error && opportunities.length > 0 && (
+      {!loading && !error && sortedOpportunities.length > 0 && (
         <div className="opportunities-grid">
-          {opportunities.map((opp) => (
+          {sortedOpportunities.map((opp) => (
             <OpportunityCard key={opp.id} opportunity={opp} mode={mode} />
           ))}
         </div>
