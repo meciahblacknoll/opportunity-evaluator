@@ -220,3 +220,114 @@ h1 {
   border-radius: 4px;
   margin: 1rem 0;
 }
+
+/* ========================================
+   Responsive Design - Mobile First
+   ======================================== */
+
+/* Mobile devices (375px - 767px) */
+@media (max-width: 767px) {
+  .app {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  /* Single column grid on mobile */
+  .opportunities-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Smaller cards on mobile */
+  .opportunity-card {
+    padding: 1rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  .composite-score {
+    font-size: 1.5rem;
+  }
+
+  /* Stack metrics vertically on very small screens */
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  /* Navigation adjustments */
+  nav {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 12px !important;
+  }
+
+  nav > div {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100%;
+  }
+
+  nav a {
+    display: block;
+    text-align: center;
+  }
+
+  /* SimulatePage responsive layouts */
+  .simulate-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .simulate-summary-metrics {
+    flex-direction: column !important;
+  }
+
+  .simulate-timeline-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Small tablets (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  /* 2 columns on tablet */
+  .opportunities-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  /* Keep 2-column metrics on tablet */
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* SimulatePage tablet layouts */
+  .simulate-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .simulate-timeline-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Large screens (1024px+) - default styles apply */
+@media (min-width: 1024px) {
+  /* Desktop styles are the default */
+}

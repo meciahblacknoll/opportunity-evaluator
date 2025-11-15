@@ -180,7 +180,7 @@ export default function SimulatePage() {
       )}
 
       {/* Form */}
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 20 }} className="simulate-form-grid">
         <div style={{ padding: 12, borderRadius: 8, border: "1px solid var(--border-light)", background: "var(--bg-secondary)" }}>
           <h3>Simulation Inputs</h3>
 
@@ -346,7 +346,7 @@ export default function SimulatePage() {
             <h2>Simulation Results</h2>
 
             {/* Summary metrics */}
-            <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+            <div style={{ display: "flex", gap: 12, marginBottom: 12 }} className="simulate-summary-metrics">
               <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
                 <div style={{ fontSize: 12, color: "var(--text-secondary)" }}>Total APR Cost</div>
                 <div style={{ fontSize: 20, fontWeight: 700, color: "var(--text-heading)" }}>${centsToDollars(simResult.total_apr_cost || 0)}</div>
@@ -395,7 +395,7 @@ export default function SimulatePage() {
             </div>
 
             {/* Timeline + sparkline */}
-            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }} className="simulate-timeline-grid">
               <div style={{ padding: 12, border: "1px solid var(--border-light)", borderRadius: 8, background: "var(--bg-secondary)" }}>
                 <h3>Daily Liquidity Timeline</h3>
                 {simResult.timeline && simResult.timeline.length ? (
