@@ -16,6 +16,11 @@ import OpportunityCard from '../components/OpportunityCard'
 import ScoringModeToggle from '../components/ScoringModeToggle'
 import ExportButtons from '../components/ExportButtons'
 import SortControls from '../components/SortControls'
+import FilterControls from '../components/FilterControls'
+import ControlsBar from '../components/ControlsBar'
+import LoadingSkeleton from '../components/LoadingSkeleton'
+import EmptyState from '../components/EmptyState'
+import ErrorState from '../components/ErrorState'
 
 export default function TopOpportunities() {
   // Initialize mode from localStorage, default to "roi"
@@ -27,6 +32,12 @@ export default function TopOpportunities() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [sortBy, setSortBy] = useState('score-desc')
+  const [filters, setFilters] = useState({
+    banks: [],
+    types: [],
+    minAPR: 0,
+    minProfit: 0
+  })
 
   // Persist mode to localStorage whenever it changes
   useEffect(() => {
@@ -59,9 +70,48 @@ export default function TopOpportunities() {
     fetchOpportunities()
   }, [fetchOpportunities])
 
-  // Sort opportunities based on selected option
+  // Filter opportunities first
+  const filteredOpportunities = useMemo(() => {
+    return opportunities.filter(opp => {
+      // Bank filter
+      if (filters.banks.length > 0) {
+        const oppBank = opp.bank || opp.issuer;
+        if (!oppBank || !filters.banks.includes(oppBank)) {
+          return false;
+        }
+      }
+
+      // Type filter
+      if (filters.types.length > 0) {
+        const oppType = opp.type || opp.category;
+        if (!oppType || !filters.types.includes(oppType)) {
+          return false;
+        }
+      }
+
+      // Min APR filter
+      if (filters.minAPR > 0) {
+        const oppAPR = opp.apr || opp.apr_percent || 0;
+        if (oppAPR < filters.minAPR) {
+          return false;
+        }
+      }
+
+      // Min Profit filter
+      if (filters.minProfit > 0) {
+        const oppProfit = opp.profit || opp.expected_profit || 0;
+        if (oppProfit < filters.minProfit) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [opportunities, filters]);
+
+  // Sort filtered opportunities
   const sortedOpportunities = useMemo(() => {
-    const sorted = [...opportunities];
+    const sorted = [...filteredOpportunities];
     const [field, direction] = sortBy.split('-');
 
     sorted.sort((a, b) => {
@@ -86,7 +136,7 @@ export default function TopOpportunities() {
     });
 
     return sorted;
-  }, [opportunities, sortBy]);
+  }, [filteredOpportunities, sortBy]);
 
   return (
     <div className="app">
@@ -97,7 +147,7 @@ export default function TopOpportunities() {
         </p>
       </header>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem', flexWrap: 'wrap', gap: '1rem' }}>
+      <ControlsBar>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <ScoringModeToggle mode={mode} setMode={setMode} />
           <SortControls sortBy={sortBy} onSortChange={setSortBy} />
@@ -107,24 +157,34 @@ export default function TopOpportunities() {
           filenameBase="opportunities"
           disabled={loading || opportunities.length === 0}
         />
-      </div>
+      </ControlsBar>
+
+      <FilterControls
+        filters={filters}
+        onFilterChange={setFilters}
+        opportunities={opportunities}
+      />
 
       {error && (
-        <div className="error">
-          {error}
-        </div>
+        <ErrorState error={error} onRetry={fetchOpportunities} />
       )}
 
-      {loading && (
-        <div className="loading">
-          Loading opportunities...
-        </div>
+      {loading && !error && (
+        <LoadingSkeleton count={6} />
       )}
 
       {!loading && !error && opportunities.length === 0 && (
-        <div className="loading">
-          No opportunities found. Add some via the API!
-        </div>
+        <EmptyState
+          message="No opportunities found"
+          action="Add some opportunities via the API to get started!"
+        />
+      )}
+
+      {!loading && !error && opportunities.length > 0 && sortedOpportunities.length === 0 && (
+        <EmptyState
+          message="No matches found"
+          action="No opportunities match the current filters. Try adjusting your filters."
+        />
       )}
 
       {!loading && !error && sortedOpportunities.length > 0 && (
