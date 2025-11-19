@@ -45,7 +45,7 @@ async def list_accounts(
     db: aiosqlite.Connection = Depends(get_db)
 ):
     """List all accounts with optional type filter."""
-    query = "SELECT id, name, type, credit_limit, current_balance, apr_percent, statement_day, due_day, available_credit, notes, created_at FROM accounts"
+    query = "SELECT id, name, type, credit_limit, current_balance, apr as apr_percent, statement_day, due_day, available_credit, notes, created_at FROM accounts"
     params = []
 
     if account_type:
@@ -81,7 +81,7 @@ async def get_account(
     db: aiosqlite.Connection = Depends(get_db)
 ):
     """Get a specific account by ID."""
-    query = "SELECT id, name, type, credit_limit, current_balance, apr_percent, statement_day, due_day, available_credit, notes, created_at FROM accounts WHERE id = ?"
+    query = "SELECT id, name, type, credit_limit, current_balance, apr as apr_percent, statement_day, due_day, available_credit, notes, created_at FROM accounts WHERE id = ?"
 
     async with db.execute(query, [account_id]) as cursor:
         row = await cursor.fetchone()
@@ -111,7 +111,7 @@ async def create_account(
 ):
     """Create a new account."""
     query = """
-        INSERT INTO accounts (name, type, credit_limit, current_balance, apr_percent, statement_day, due_day, available_credit, notes)
+        INSERT INTO accounts (name, type, credit_limit, current_balance, apr, statement_day, due_day, available_credit, notes)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     """
 
